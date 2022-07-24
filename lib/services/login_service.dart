@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dvmane/UI/home_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../PoJos/response/login_response_class.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import '../configuration/globals.dart';
 
 class LoginService extends ChangeNotifier{
 
@@ -37,7 +40,7 @@ class LoginService extends ChangeNotifier{
     try {
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request(
-          'POST', Uri.parse('http://65.1.104.178/api/users/checkLogin'));
+          'POST', Uri.parse('${Globals.apiUrl}/api/users/checkLogin'));
       request.body = json.encode(
           {"contact": "$mobileNo", "password": "$password", "flag": "mobile"});
       request.headers.addAll(headers);
@@ -48,6 +51,7 @@ class LoginService extends ChangeNotifier{
         String response1 = await response.stream.bytesToString();
         LoginResponseClass loginResponseClass = LoginResponseClass.fromJson(
             json.decode(response1));
+        const FlutterSecureStorage().write(key: "TOKEN", value: loginResponseClass.token);
         return loginResponseClass;
       } else {
         String response1 = await response.stream.bytesToString();

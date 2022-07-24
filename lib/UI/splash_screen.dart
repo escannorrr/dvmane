@@ -1,4 +1,6 @@
+import 'package:dvmane/UI/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'login_screen.dart';
 
@@ -15,10 +17,22 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(seconds: 3),(){
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
-    });
+    navigate();
+  }
+
+  navigate()async{
+    var storage = FlutterSecureStorage();
+    if(await storage.read(key: 'TOKEN')!=null || await storage.read(key: 'TOKEN')!=""){
+      Future.delayed(const Duration(seconds: 3),(){
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomePage()));
+      });
+    }else{
+      Future.delayed(const Duration(seconds: 3),(){
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      });
+    }
   }
 
   @override

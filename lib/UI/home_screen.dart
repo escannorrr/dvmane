@@ -1,5 +1,8 @@
 import 'package:dvmane/UI/report_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'login_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,13 +21,22 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           title: const Text(
             "Home",
-            style: TextStyle(
-              fontSize: 18.0
-            ),
+            style: TextStyle(fontSize: 18.0),
           ),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  const FlutterSecureStorage().write(key: "TOKEN", value: "");
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                },
+                icon: const Icon(Icons.logout))
+          ],
           bottom: const TabBar(
               indicatorWeight: 4.0,
-              isScrollable:false,
+              isScrollable: false,
               labelPadding: EdgeInsets.symmetric(horizontal: 2.0),
               tabs: [
                 Tab(
@@ -36,14 +48,13 @@ class _HomePageState extends State<HomePage> {
                 Tab(
                   text: "Rejected",
                 ),
-              ]
-          ),
+              ]),
         ),
         body: const TabBarView(
           children: [
-            ReportScreen(state:"Pending"),
-            ReportScreen(state:"Approved"),
-            ReportScreen(state:"Rejected"),
+            ReportScreen(state: "Pending"),
+            ReportScreen(state: "Approved"),
+            ReportScreen(state: "Rejected"),
           ],
         ),
       ),
